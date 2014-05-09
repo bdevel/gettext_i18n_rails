@@ -14,23 +14,39 @@ namespace :gettext do
 
   # do not rename, gettext_i18n_rails_js overwrites this to inject coffee + js
   def files_to_translate
-    Dir.glob("{app,lib,config,#{locale_path}}/**/*.{rb,erb,haml,slim}")
+    if GettextI18nRails.options.files_to_translate.is_a? Proc
+      GettextI18nRails.options.files_to_translate.call(locale_path)
+      
+    elsif GettextI18nRails.options.files_to_translate.is_a? Array
+      GettextI18nRails.options.files_to_translate
+      
+    else
+      Dir.glob("{app,lib,config,#{locale_path}}/**/*.{rb,erb,haml,slim}")
+    end
   end
 
   def gettext_default_options
-    config = (Rails.application.config.gettext_i18n_rails.default_options if defined?(Rails.application))
+    config = GettextI18nRails.options.default_gettext_options
+
+    # Keeping for legacy support
+    config ||= (Rails.application.config.gettext_i18n_rails.default_options if defined?(Rails.application))
     config || %w[--sort-by-msgid --no-location --no-wrap]
   end
 
   def gettext_msgmerge_options
-    config = (Rails.application.config.gettext_i18n_rails.msgmerge if defined?(Rails.application))
+    config == GettextI18nRails.options.msgmerge_options
+    # Keeping for legacy support
+    config ||= (Rails.application.config.gettext_i18n_rails.msgmerge if defined?(Rails.application))
     config || gettext_default_options
   end
 
   def gettext_xgettext_options
-    config = (Rails.application.config.gettext_i18n_rails.xgettext if defined?(Rails.application))
+    config = GettextI18nRails.options.xgettext_options
+    # Keeping for legacy support
+    config ||= (Rails.application.config.gettext_i18n_rails.xgettext if defined?(Rails.application))
     config || gettext_default_options
   end
+  
 
   $LOAD_PATH << File.join(File.dirname(__FILE__),'..','..','lib') # needed when installed as plugin
 

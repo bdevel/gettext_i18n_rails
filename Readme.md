@@ -37,13 +37,13 @@ Add `ruby_parser` if you want to find translations inside haml/slim files
 ###### Add first language:
 Add the first language using:
 
-    rake gettext:add_language[XX]
+    rake gettext:add_language[xx]
 
 or
 
-    LANGUAGE=[XX] rake gettext:add_language
+    LANGUAGE=[xx] rake gettext:add_language
 
-where XX is the [ISO 639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) 2-letter code for the language you want to create.
+where xx is the [ISO 639-1](http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) 2-letter code for the language you want to create.
 
 This will also create the `locale` directory (where the translations are being stored) and run `gettext:find` to find any strings marked for translation.
 
@@ -258,15 +258,19 @@ The default options for parsing and create `.po` files are:
 
 These options sort the translations by the msgid (original / source string), don't add location information in the po file and don't wrap long message lines into several lines.
 
-If you want to override them you can put the following into an initializer like config/initializers/gettext.rb:
+If you want to override them you can put the following into your environment.rb:
 
-    Rails.application.config.gettext_i18n_rails.msgmerge = %w[--no-location]
-    Rails.application.config.gettext_i18n_rails.xgettext = %w[--no-location]
 
-or
-
-    Rails.application.config.gettext_i18n_rails.default_options = %w[--no-location]
-
+    GettextI18nRails.configure do |gt|
+      gt.default_gettext_options = %w[--sort-by-msgid --no-location --no-wrap]
+      gt.msgmerge_options = %w[--no-location]
+      gt.xgettext_options  = %w[--no-location]
+      
+      gt.files_to_translate = Proc.new do |locale_path|
+        Dir.glob("{app,lib,config,#{locale_path}}/**/*.{rb,erb,haml,slim,js,hbs,es6}")
+      end
+    end
+          
 to override both.
 
 You can see the available options by running `rgettext -h` and `rxgettext -h`.
@@ -274,7 +278,7 @@ You can see the available options by running `rgettext -h` and `rxgettext -h`.
 Using your translations from javascript
 =======================================
 
-If want to use your .PO files on client side javascript you should have a look at the [GettextI18nRailsJs](https://github.com/nubis/gettext_i18n_rails_js) extension.
+If want to use your .PO files on client side javascript you should have a look at the [GettextI18nRailsJs](https://github.com/bdevel/gettext_i18n_rails_js) extension.
 
 [Contributors](http://github.com/grosser/gettext_i18n_rails/contributors)
 ======

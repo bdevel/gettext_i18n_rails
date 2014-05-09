@@ -1,4 +1,5 @@
 require 'gettext_i18n_rails/version'
+require 'gettext_i18n_rails/configuration'
 require 'gettext_i18n_rails/gettext_hooks'
 
 module GettextI18nRails
