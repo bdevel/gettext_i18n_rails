@@ -107,6 +107,7 @@ Performance is almost the same for all backends since translations are cached af
  - run `rake gettext:find`, to let GetText find all translations used
  - (optional) run `rake gettext:store_model_attributes`, to parse the database for columns that can be translated
  - if this is your first translation: `cp locale/app.pot locale/de/app.po` for every locale you want to use
+ - Set the "Plural-Forms" option in the new .po file to "nplurals=2; plural=(n != 1);\n" for English. See the [gettext plural-forms page ](http://localization-guide.readthedocs.org/en/latest/l10n/pluralforms.html) a list for other languages.
  - translate messages in 'locale/de/app.po' (leave msgstr blank and msgstr == msgid)
 
 New translations will be marked "fuzzy", search for this and remove it, so that they will be used.
