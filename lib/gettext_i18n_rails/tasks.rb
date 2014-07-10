@@ -34,7 +34,7 @@ namespace :gettext do
   end
 
   def gettext_msgmerge_options
-    config == GettextI18nRails.options.msgmerge_options
+    config = GettextI18nRails.options.msgmerge_options
     # Keeping for legacy support
     config ||= (Rails.application.config.gettext_i18n_rails.msgmerge if defined?(Rails.application))
     config || gettext_default_options
